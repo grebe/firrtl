@@ -24,17 +24,18 @@ val commonSettings = Seq(
     // crossScalaVersions := Seq("2.11.11", "2.12.3"),
     // scalacOptions := scalacOptionsVersion(scalaVersion.value),
     // javacOptions ++= javacOptionsVersion(scalaVersion.value),
-    libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3",
-    libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test",
-    libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
+    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.1" % "test",
+    libraryDependencies += "org.scalacheck" %%% "scalacheck" % "1.13.4" % "test",
     libraryDependencies += "com.github.scopt" %%% "scopt" % "3.7.0",
+    libraryDependencies += "net.jcazevedo" %% "moultingyaml" % "0.4.0"
 )
 
 val jsSettings  = Seq(
     resolvers += Resolver.jcenterRepo,
     libraryDependencies += "biz.enef" %%% "slogging" % "0.5.3",
-    libraryDependencies += "com.definitelyscala" %%% "scala-js-yamljs" % "1.0.2"
+    libraryDependencies += "com.definitelyscala" %%% "scala-js-yamljs" % "1.0.2",
+    scalaJSModuleKind := ModuleKind.CommonJSModule,
+    scalaJSUseMainModuleInitializer := true
 )
 
 val jvmSettings = Seq(
@@ -53,6 +54,8 @@ val jvmSettings = Seq(
       "-doc-root-content", baseDirectory.value+"/root-doc.txt"
     ) ++ scalacOptionsVersion(scalaVersion.value),
     // libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2",
+    libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3",
     libraryDependencies += "biz.enef" %% "slogging-slf4j" % "0.5.3",
     libraryDependencies += "org.slf4j" % "slf4j-simple" % "1.7.+",  // or another slf4j implementation
     libraryDependencies += "net.jcazevedo" %% "moultingyaml" % "0.4.0"

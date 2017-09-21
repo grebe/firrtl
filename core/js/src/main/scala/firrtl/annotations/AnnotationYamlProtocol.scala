@@ -7,26 +7,9 @@ import scala.scalajs.js
 import com.definitelyscala.yamljs.YAML._
 
 object AnnotationYamlProtocol {
-  @ScalaJSDefined
-  class JSAnnotation(
-    target: String,
-    transform: String,
-    value: String
-  ) extends js.Object
-  def annotationToJS(a: Annotation): JSAnnotation = new JSAnnotation(
-    target = a.targetString,
-    transform = a.transformClass,
-    value = a.value
-  )
-  def jsToAnnotation(a: JSAnnotation): Annotation = {
-    firrtl.TargetDirAnnotation(a.toString)
-  }
   implicit object AnnotationYamlFormat {
-    def write(a: Annotation) = YAML.stringify(annotationToJS(a))
-    def read(a: String)      = YAML.parse(a) match {
-      case jsAnno: JSAnnotation => jsToAnnotation(jsAnno)
-      case _ => throw new Exception("Not an annotation")
-    }
+    def write(a: Annotation) = YAML.stringify(js.use(a).as[js.Any])
+    def read(a: String)      = YAML.parse(a).asInstanceOf[Annotation]
     def toTarget(string: String): Named = string.split("""\.""", -1).toSeq match {
       case Seq(c) => CircuitName(c)
       case Seq(c, m) => ModuleName(m, CircuitName(c))

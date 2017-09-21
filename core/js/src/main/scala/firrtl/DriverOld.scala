@@ -244,9 +244,9 @@ object Driver {
     }
   }
 
-  def main(args: Array[String]): Unit = {
-    execute(args)
-  }
+  // def main(args: Array[String]): Unit = {
+  //   execute(args)
+  // }
 }
 
 object FileUtils {
