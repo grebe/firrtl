@@ -3,6 +3,7 @@ import ammonite.ops.ImplicitWd._
 import mill._
 import mill.scalalib._
 import mill.scalalib.publish._
+import mill.util.Ctx
 import mill.eval.Evaluator
 
 import $file.BuildInfo
@@ -44,7 +45,7 @@ trait CommonModule extends CrossUnRootedSbtModule with PublishModule {
 // Generic antlr4 configuration.
 // This could be simpler, but I'm trying to keep some compatibility with the sbt plugin.
 case class Antlr4Config(val sourcePath: Path) {
-  val ANTLR4_JAR = (home / 'lib / "antlr-4.7.1-complete.jar").toString
+  val ANTLR4_JAR = "https://www.antlr.org/download/antlr-4.7.1-complete.jar"
   val antlr4GenVisitor: Boolean = true
   val antlr4GenListener: Boolean = false
   val antlr4PackageName: Option[String] = Some("firrtl.antlr")
@@ -56,8 +57,11 @@ case class Antlr4Config(val sourcePath: Path) {
     case Some(p) => Seq("-package", p)
     case None => Seq.empty
   }
-  def runAntlr(outputPath: Path) = {
-    val cmd = Seq[String]("java", "-jar", ANTLR4_JAR, "-o", outputPath.toString, "-lib", sourcePath.toString, listenerArg, visitorArg) ++ packageArg :+ (sourcePath / "FIRRTL.g4").toString
+
+
+  def runAntlr(outputPath: Path)(implicit ctx: Ctx.Dest) = {
+    val jar = mill.modules.Util.download(ANTLR4_JAR, "antlr4.jar")
+    val cmd = Seq[String]("java", "-jar", jar.path.toString, "-o", outputPath.toString, "-lib", sourcePath.toString, listenerArg, visitorArg) ++ packageArg :+ (sourcePath / "FIRRTL.g4").toString
     val result = %%(cmd)
   }
 }
@@ -95,26 +99,27 @@ class FirrtlModule(val crossScalaVersion: String) extends CommonModule with Buil
   override def artifactName = "firrtl"
 
   override def ivyDeps = Agg(
-    ivy"com.typesafe.scala-logging::scala-logging:3.7.2",
+    ivy"com.typesafe.scala-logging::scala-logging:3.9.0",
     ivy"ch.qos.logback:logback-classic:1.2.3",
-    ivy"com.github.scopt::scopt:3.6.0",
+    ivy"com.github.scopt::scopt:3.7.0",
     ivy"net.jcazevedo::moultingyaml:0.4.0",
-    ivy"org.json4s::json4s-native:3.5.3",
+    ivy"org.json4s::json4s-native:3.6.1",
     ivy"org.antlr:antlr4-runtime:4.7",
     ivy"${Protobuf.ProtobufConfig.ivyDep}"
   )
 
   object test extends Tests {
     override def ivyDeps = Agg(
-      ivy"org.scalatest::scalatest:3.0.1",
-      ivy"org.scalacheck::scalacheck:1.13.4"
+      ivy"junit:junit:4.12",
+      ivy"org.scalatest::scalatest:3.0.5",
+      ivy"org.scalacheck::scalacheck:1.14.0"
     )
     def testFrameworks = Seq("org.scalatest.tools.Framework")
   }
 
   def antlrSourceRoot = T.sources{ pwd / 'src / 'main / 'antlr4 }
 
-  def generateAntlrSources(p: Path, sourcePath: Path) = {
+  def generateAntlrSources(p: Path, sourcePath: Path)(implicit ctx: Ctx.Dest) = {
     val antlr = new Antlr4Config(sourcePath)
     antlr.runAntlr(p)
     p
