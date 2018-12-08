@@ -9,11 +9,9 @@ import scala.util.{Failure, Success, Try}
 import scala.util.control.ControlThrowable
 import java.io.{File, FileNotFoundException}
 
-import net.jcazevedo.moultingyaml._
 import logger.Logger
 import Parser.{IgnoreInfo, InfoMode}
 import annotations._
-import firrtl.annotations.AnnotationYamlProtocol._
 import firrtl.passes.{PassException, PassExceptions}
 import firrtl.transforms._
 import firrtl.Utils.throwInternalError
@@ -120,11 +118,10 @@ object Driver {
         throw new AnnotationFileNotFoundException(file)
       }
       // Try new protocol first
-      JsonProtocol.deserializeTry(file).recoverWith { case jsonException =>
+      PlatformJsonProtocol.deserializeTry(file).recoverWith { case jsonException =>
         // Try old protocol if new one fails
         Try {
-          val yaml = io.Source.fromFile(file).getLines().mkString("\n").parseYaml
-          val result = yaml.convertTo[List[LegacyAnnotation]]
+          val result = AnnotationUtils.fromYaml(io.Source.fromFile(file).getLines().mkString("\n"))
           val msg = s"$file is a YAML file!\n" +
                     (" "*9) + "YAML Annotation files are deprecated! Use JSON"
           Driver.dramaticWarning(msg)

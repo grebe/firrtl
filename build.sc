@@ -1,10 +1,11 @@
 import ammonite.ops._
 import ammonite.ops.ImplicitWd._
 import mill._
+import mill.eval.Evaluator
+import mill.util.Ctx
 import mill.scalalib._
 import mill.scalalib.publish._
-import mill.util.Ctx
-import mill.eval.Evaluator
+import mill.scalajslib._
 
 import $file.BuildInfo
 import $file.CommonBuild
@@ -69,7 +70,7 @@ case class Antlr4Config(val sourcePath: Path) {
 val crossVersions = Seq("2.11.12", "2.12.4")
 
 // Make this available to external tools.
-object firrtl extends Cross[FirrtlModule](crossVersions: _*) {
+object firrtl extends Cross[FirrtlJvmModule](crossVersions: _*) {
   def defaultVersion(ev: Evaluator) = T.command{
     println(crossVersions.head)
   }
@@ -95,15 +96,58 @@ object firrtl extends Cross[FirrtlModule](crossVersions: _*) {
   }
 }
 
-class FirrtlModule(val crossScalaVersion: String) extends CommonModule with BuildInfo.BuildInfo {
+// Make this available to external tools.
+object firrtljs extends Cross[FirrtlJsModule](crossVersions: _*) {
+  def defaultVersion(ev: Evaluator) = T.command{
+    println(crossVersions.head)
+  }
+
+  def compile = T{
+    firrtljs(crossVersions.head).compile()
+  }
+
+  def jar = T{
+    firrtljs(crossVersions.head).jar()
+  }
+
+  def test = T{
+    firrtljs(crossVersions.head).test.test()
+  }
+
+  def publishLocal = T{
+    firrtljs(crossVersions.head).publishLocal()
+  }
+
+  def docJar = T{
+    firrtljs(crossVersions.head).docJar()
+  }
+}
+
+class FirrtlJvmModule(val crossScalaVersion: String) extends FirrtlModule {
+  def platformSegment = "jvm"
+
+  override def ivyDeps = super.ivyDeps() ++ Agg(
+    ivy"net.jcazevedo::moultingyaml:0.4.0",
+    ivy"org.json4s::json4s-native:3.6.1",
+  )
+}
+
+class FirrtlJsModule(val crossScalaVersion: String) extends FirrtlModule with ScalaJSModule {
+  def platformSegment = "js"
+
+  def scalaJSVersion = "1.0.0-M2"
+}
+
+
+trait FirrtlModule extends CommonModule with BuildInfo.BuildInfo {
+  def platformSegment: String
+
   override def artifactName = "firrtl"
 
   override def ivyDeps = Agg(
     ivy"com.typesafe.scala-logging::scala-logging:3.9.0",
     ivy"ch.qos.logback:logback-classic:1.2.3",
     ivy"com.github.scopt::scopt:3.7.0",
-    ivy"net.jcazevedo::moultingyaml:0.4.0",
-    ivy"org.json4s::json4s-native:3.6.1",
     ivy"org.antlr:antlr4-runtime:4.7",
     ivy"${Protobuf.ProtobufConfig.ivyDep}"
   )
@@ -132,6 +176,11 @@ class FirrtlModule(val crossScalaVersion: String) extends CommonModule with Buil
     protobuf.runProtoc(p)
     p
   }
+
+  def sources = T.sources(
+    millSourcePath / "src" / "main",
+    millSourcePath / platformSegment / "src" / "main"
+  )
 
   override def generatedSources = T {
     val antlrSourcePath: Path = antlrSourceRoot().head.path

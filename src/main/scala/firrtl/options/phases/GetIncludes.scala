@@ -2,11 +2,8 @@
 
 package firrtl.options.phases
 
-import net.jcazevedo.moultingyaml._
-
 import firrtl.AnnotationSeq
-import firrtl.annotations.{AnnotationFileNotFoundException, DeletedAnnotation, JsonProtocol, LegacyAnnotation}
-import firrtl.annotations.AnnotationYamlProtocol._
+import firrtl.annotations.{AnnotationFileNotFoundException, AnnotationUtils, DeletedAnnotation, JsonProtocol, LegacyAnnotation, PlatformJsonProtocol}
 import firrtl.options.{InputAnnotationFileAnnotation, Phase, StageUtils}
 
 import java.io.File
@@ -24,11 +21,10 @@ object GetIncludes extends Phase {
   private def readAnnotationsFromFile(filename: String): AnnotationSeq = {
     val file = new File(filename).getCanonicalFile
     if (!file.exists) { throw new AnnotationFileNotFoundException(file) }
-    JsonProtocol.deserializeTry(file).recoverWith { case jsonException =>
+    PlatformJsonProtocol.deserializeTry(file).recoverWith { case jsonException =>
       // Try old protocol if new one fails
       Try {
-        val yaml = io.Source.fromFile(file).getLines().mkString("\n").parseYaml
-        val result = yaml.convertTo[List[LegacyAnnotation]]
+        val result = AnnotationUtils.fromYaml(io.Source.fromFile(file).getLines().mkString("\n"))
         val msg = s"$file is a YAML file!\n" + (" "*9) + "YAML Annotation files are deprecated! Use JSON"
         StageUtils.dramaticWarning(msg)
         result

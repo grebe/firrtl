@@ -5,14 +5,6 @@ package annotations
 
 import java.io.File
 
-import org.json4s._
-import org.json4s.native.JsonMethods._
-import org.json4s.native.Serialization
-import org.json4s.native.Serialization.{read, write, writePretty}
-
-import net.jcazevedo.moultingyaml._
-import firrtl.annotations.AnnotationYamlProtocol._
-
 import firrtl.ir._
 import firrtl.Utils.error
 
@@ -27,9 +19,9 @@ case class AnnotationClassNotFoundException(className: String) extends FIRRTLExc
 )
 
 object AnnotationUtils {
-  def toYaml(a: LegacyAnnotation): String = a.toYaml.prettyPrint
-  def fromYaml(s: String): LegacyAnnotation = s.parseYaml.convertTo[LegacyAnnotation]
-
+  def toYaml(a: LegacyAnnotation): String = PlatformAnnotationUtils.toYaml(a)
+  // TODO
+  def fromYaml(s: String): Seq[LegacyAnnotation] = Seq(PlatformAnnotationUtils.fromYaml(s))
   /** Returns true if a valid Module name */
   val SerializedModuleName = """([a-zA-Z_][a-zA-Z_0-9~!@#$%^*\-+=?/]*)""".r
   def validModuleName(s: String): Boolean = s match {

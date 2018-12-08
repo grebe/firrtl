@@ -119,7 +119,7 @@ class ReplSeqMem extends Transform with HasScoptOptions {
     .maxOccurs(1)
     .text("Replace sequential memories with blackboxes + configuration file")
 
-  def transforms(inConfigFile: Option[YamlFileReader], outConfigFile: ConfWriter): Seq[Transform] =
+  def transforms(inConfigFile: Option[String], outConfigFile: ConfWriter): Seq[Transform] =
     Seq(new SimpleMidTransform(Legalize),
         new SimpleMidTransform(ToMemIR),
         new SimpleMidTransform(ResolveMaskGranularity),
@@ -142,7 +142,7 @@ class ReplSeqMem extends Transform with HasScoptOptions {
       case Seq(ReplSeqMemAnnotation(inputFileName, outputConfig)) =>
         val inConfigFile = {
           if (inputFileName.isEmpty) None
-          else if (new File(inputFileName).exists) Some(new YamlFileReader(inputFileName))
+          else if (new File(inputFileName).exists) Some(inputFileName)
           else error("Input configuration file does not exist!")
         }
         val outConfigFile = new ConfWriter(outputConfig)
