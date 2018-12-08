@@ -4,7 +4,6 @@ package firrtlTests
 
 import java.io.{File, FileWriter, Writer}
 
-import firrtl.annotations.AnnotationYamlProtocol._
 import firrtl.annotations._
 import firrtl._
 import firrtl.transforms.OptimizableExtModuleAnnotation
@@ -471,42 +470,42 @@ class LegacyAnnotationTests extends AnnotationTests {
   def manno(mod: String): Annotation =
     Annotation(ModuleName(mod, CircuitName("Top")), classOf[Transform], "some value")
 
-  "LegacyAnnotations" should "be readable from file" in {
-    val annotationStream = getClass.getResourceAsStream("/annotations/SampleAnnotations.anno")
-    val annotationsYaml = scala.io.Source.fromInputStream(annotationStream).getLines().mkString("\n").parseYaml
-    val annotationArray = annotationsYaml.convertTo[Array[LegacyAnnotation]]
-    annotationArray.length should be (9)
-    annotationArray(0).targetString should be ("ModC")
-    annotationArray(7).transformClass should be ("firrtl.passes.InlineInstances")
-    val expectedValue = "TopOfDiamond\nWith\nSome new lines"
-    annotationArray(7).value should be (expectedValue)
-  }
+  // "LegacyAnnotations" should "be readable from file" in {
+  //   val annotationStream = getClass.getResourceAsStream("/annotations/SampleAnnotations.anno")
+  //   val annotationsYaml = scala.io.Source.fromInputStream(annotationStream).getLines().mkString("\n").parseYaml
+  //   val annotationArray = annotationsYaml.convertTo[Array[LegacyAnnotation]]
+  //   annotationArray.length should be (9)
+  //   annotationArray(0).targetString should be ("ModC")
+  //   annotationArray(7).transformClass should be ("firrtl.passes.InlineInstances")
+  //   val expectedValue = "TopOfDiamond\nWith\nSome new lines"
+  //   annotationArray(7).value should be (expectedValue)
+  // }
 
-  "Badly formatted LegacyAnnotation serializations" should "return reasonable error messages" in {
-    var badYaml =
-      """
-        |- transformClass: firrtl.passes.InlineInstances
-        |  targetString: circuit.module..
-        |  value: ModC.this params 16 32
-      """.stripMargin.parseYaml
+  // "Badly formatted LegacyAnnotation serializations" should "return reasonable error messages" in {
+  //   var badYaml =
+  //     """
+  //       |- transformClass: firrtl.passes.InlineInstances
+  //       |  targetString: circuit.module..
+  //       |  value: ModC.this params 16 32
+  //     """.stripMargin.parseYaml
 
-    var thrown = intercept[Exception] {
-      badYaml.convertTo[Array[LegacyAnnotation]]
-    }
-    thrown.getMessage should include ("Illegal component name")
+  //   var thrown = intercept[Exception] {
+  //     badYaml.convertTo[Array[LegacyAnnotation]]
+  //   }
+  //   thrown.getMessage should include ("Illegal component name")
 
-    badYaml =
-      """
-        |- transformClass: firrtl.passes.InlineInstances
-        |  targetString: .circuit.module.component
-        |  value: ModC.this params 16 32
-      """.stripMargin.parseYaml
+  //   badYaml =
+  //     """
+  //       |- transformClass: firrtl.passes.InlineInstances
+  //       |  targetString: .circuit.module.component
+  //       |  value: ModC.this params 16 32
+  //     """.stripMargin.parseYaml
 
-    thrown = intercept[Exception] {
-      badYaml.convertTo[Array[LegacyAnnotation]]
-    }
-    thrown.getMessage should include ("Illegal circuit name")
-  }
+  //   thrown = intercept[Exception] {
+  //     badYaml.convertTo[Array[LegacyAnnotation]]
+  //   }
+  //   thrown.getMessage should include ("Illegal circuit name")
+  // }
 
 }
 
@@ -541,7 +540,7 @@ class JsonAnnotationTests extends AnnotationTests with BackendCompilationUtiliti
     val text = io.Source.fromFile(annoFile).getLines().mkString("\n")
     annoFile.delete()
 
-    val readAnnos = JsonProtocol.deserializeTry(text).get
+    val readAnnos = JsonProtocol.deserialize(text)
 
     annos should be (readAnnos)
   }

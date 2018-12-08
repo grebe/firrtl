@@ -159,9 +159,17 @@ trait FirrtlModule extends CommonModule with BuildInfo.BuildInfo {
       ivy"org.scalacheck::scalacheck:1.14.0"
     )
     def testFrameworks = Seq("org.scalatest.tools.Framework")
+
+    override def sources = T.sources(
+      millSourcePath / "shared" / "src" / "test",
+    )
+
+    override def resources = T.sources(
+      millSourcePath / "shared" / "src" / "test" / "resources",
+    )
   }
 
-  def antlrSourceRoot = T.sources{ pwd / 'src / 'main / 'antlr4 }
+  def antlrSourceRoot = T.sources{ pwd / 'shared / 'src / 'main / 'antlr4 }
 
   def generateAntlrSources(p: Path, sourcePath: Path)(implicit ctx: Ctx.Dest) = {
     val antlr = new Antlr4Config(sourcePath)
@@ -169,7 +177,7 @@ trait FirrtlModule extends CommonModule with BuildInfo.BuildInfo {
     p
   }
 
-  def protobufSourceRoot = T.sources{ pwd / 'src / 'main / 'proto }
+  def protobufSourceRoot = T.sources{ pwd / 'shared / 'src / 'main / 'proto }
 
   def generateProtobufSources(p: Path, sourcePath: Path) = {
     val protobuf = new Protobuf.ProtobufConfig(sourcePath)
@@ -178,8 +186,12 @@ trait FirrtlModule extends CommonModule with BuildInfo.BuildInfo {
   }
 
   def sources = T.sources(
-    millSourcePath / "src" / "main",
+    millSourcePath / "shared" / "src" / "main",
     millSourcePath / platformSegment / "src" / "main"
+  )
+
+  override def resources = T.sources(
+    millSourcePath / "shared" / "src" / "main" / "resources",
   )
 
   override def generatedSources = T {

@@ -203,7 +203,7 @@ class DriverSpec extends FreeSpec with Matchers with BackendCompilationUtilities
   }
 
   // Deprecated
-  "Annotations can be read implicitly from the name of the circuit" in {
+  "Annotations can be read implicitly from the name of the circuit" ignore {
     val top = "foo"
     val optionsManager = new ExecutionOptionsManager("test") with HasFirrtlOptions {
       commonOptions = commonOptions.copy(topName = top)
@@ -218,7 +218,7 @@ class DriverSpec extends FreeSpec with Matchers with BackendCompilationUtilities
   }
 
   // Deprecated
-  "Annotations can be read using annotationFileNameOverride" in {
+  "Annotations can be read using annotationFileNameOverride" ignore {
     val optionsManager = new ExecutionOptionsManager("test") with HasFirrtlOptions {
       commonOptions = commonOptions.copy(topName = "a.fir")
       firrtlOptions = firrtlOptions.copy(
@@ -235,7 +235,7 @@ class DriverSpec extends FreeSpec with Matchers with BackendCompilationUtilities
   }
 
   // Deprecated
-  "Supported LegacyAnnotations will be converted automagically" in {
+  "Supported LegacyAnnotations will be converted automagically" ignore {
     val testDir = createTestDirectory("test")
     val annoFilename = "LegacyAnnotations.anno"
     val annotationsTestFile = new File(testDir, annoFilename)
@@ -277,7 +277,7 @@ class DriverSpec extends FreeSpec with Matchers with BackendCompilationUtilities
   }
 
   // Deprecated
-  "UNsupported LegacyAnnotations should throw errors" in {
+  "UNsupported LegacyAnnotations should throw errors" ignore {
     val testDir = createTestDirectory("test")
     val annoFilename = "InvalidLegacyAnnotations.anno"
     val annotationsTestFile = new File(testDir, annoFilename)

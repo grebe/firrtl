@@ -51,7 +51,7 @@ class BlacklBoxSourceHelperTransformSpec extends LowTransformSpec {
 
   "annotated external modules with absolute path" should "appear in output directory" in {
 
-    val absPath = new java.io.File("src/test/resources/blackboxes/AdderExtModule.v").getCanonicalPath
+    val absPath = new java.io.File("shared/src/test/resources/blackboxes/AdderExtModule.v").getCanonicalPath
     val annos = Seq(
       BlackBoxTargetDirAnno("test_run_dir"),
       BlackBoxPathAnno(moduleName, absPath)
@@ -73,7 +73,7 @@ class BlacklBoxSourceHelperTransformSpec extends LowTransformSpec {
 
     val annos = Seq(
       BlackBoxTargetDirAnno("test_run_dir"),
-      BlackBoxPathAnno(moduleName, "src/test/resources/blackboxes/AdderExtModule.v")
+      BlackBoxPathAnno(moduleName, "shared/src/test/resources/blackboxes/AdderExtModule.v")
     )
 
     execute(input, output, annos)
@@ -150,7 +150,7 @@ class BlacklBoxSourceHelperTransformSpec extends LowTransformSpec {
   }
 
   it should "provide a useful error message for BlackBoxPathAnno" in {
-    val absPath = new java.io.File("src/test/resources/blackboxes/IDontExist.v").getCanonicalPath
+    val absPath = new java.io.File("shared/src/test/resources/blackboxes/IDontExist.v").getCanonicalPath
     val annos = Seq( BlackBoxTargetDirAnno("test_run_dir"),
                      BlackBoxPathAnno(moduleName, absPath) )
 
