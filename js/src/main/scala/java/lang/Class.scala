@@ -62,6 +62,10 @@ final class Class[A] private (data0: Object) extends Object {
   private def isJSType(): scala.Boolean =
     data.isJSType
 
+  def getCanonicalName(): String = ???
+
+  def getMethod(name: String, parameterTypes: Array[Class[A]]): reflect.Method = ???
+
   def getName(): String =
     data.name
 

@@ -148,6 +148,8 @@ class FirrtlJsModule(val crossScalaVersion: String) extends FirrtlModule with Sc
   def platformSegment = "js"
 
   def scalaJSVersion = "0.6.26"
+
+  def moduleKind = T { ModuleKind.CommonJSModule }
 }
 
 
@@ -157,7 +159,7 @@ trait FirrtlModule extends CommonModule with BuildInfo.BuildInfo {
   override def artifactName = "firrtl"
 
   override def ivyDeps = Agg(
-    ivy"com.github.scopt::scopt::3.7.0-SNAPSHOT",
+    ivy"com.github.scopt::scopt::3.7.0",
     ivy"${Protobuf.ProtobufConfig.ivyDep}"
   )
 
