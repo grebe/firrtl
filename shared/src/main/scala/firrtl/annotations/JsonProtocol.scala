@@ -13,5 +13,6 @@ object JsonProtocol {
 
 
   def deserialize(in: PlatformJsonProtocol.JsonInput): Seq[Annotation] = PlatformJsonProtocol.deserializeTry(in).get
+  def deserialize(in: String): Seq[Annotation] = ???
 
 }

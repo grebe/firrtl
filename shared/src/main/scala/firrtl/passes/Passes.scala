@@ -2,9 +2,9 @@
 
 package firrtl.passes
 
-import com.typesafe.scalalogging.LazyLogging
 import firrtl._
 import firrtl.ir._
+import firrtl.logging.LazyLogging
 import firrtl.Utils._
 import firrtl.Mappers._
 import firrtl.PrimOps._

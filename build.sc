@@ -127,15 +127,27 @@ class FirrtlJvmModule(val crossScalaVersion: String) extends FirrtlModule {
   def platformSegment = "jvm"
 
   override def ivyDeps = super.ivyDeps() ++ Agg(
+    ivy"com.typesafe.scala-logging::scala-logging:3.9.0",
+    ivy"ch.qos.logback:logback-classic:1.2.3",
     ivy"net.jcazevedo::moultingyaml:0.4.0",
+    ivy"org.antlr:antlr4-runtime:4.7",
     ivy"org.json4s::json4s-native:3.6.1",
   )
+
+  override def generatedSources = T {
+    val antlrSourcePath: Path = antlrSourceRoot().head.path
+    val antlrSources = Seq(PathRef(generateAntlrSources(T.ctx().dest, antlrSourcePath)))
+    val protobufSourcePath: Path = protobufSourceRoot().head.path
+    val protobufSources = Seq(PathRef(generateProtobufSources(T.ctx().dest, protobufSourcePath)))
+    protobufSources ++ antlrSources
+  }
+
 }
 
 class FirrtlJsModule(val crossScalaVersion: String) extends FirrtlModule with ScalaJSModule {
   def platformSegment = "js"
 
-  def scalaJSVersion = "1.0.0-M2"
+  def scalaJSVersion = "0.6.26"
 }
 
 
@@ -145,10 +157,7 @@ trait FirrtlModule extends CommonModule with BuildInfo.BuildInfo {
   override def artifactName = "firrtl"
 
   override def ivyDeps = Agg(
-    ivy"com.typesafe.scala-logging::scala-logging:3.9.0",
-    ivy"ch.qos.logback:logback-classic:1.2.3",
-    ivy"com.github.scopt::scopt:3.7.0",
-    ivy"org.antlr:antlr4-runtime:4.7",
+    ivy"com.github.scopt::scopt::3.7.0-SNAPSHOT",
     ivy"${Protobuf.ProtobufConfig.ivyDep}"
   )
 
@@ -162,6 +171,7 @@ trait FirrtlModule extends CommonModule with BuildInfo.BuildInfo {
 
     override def sources = T.sources(
       millSourcePath / "shared" / "src" / "test",
+      millSourcePath / platformSegment / "src" / "test",
     )
 
     override def resources = T.sources(
@@ -193,14 +203,6 @@ trait FirrtlModule extends CommonModule with BuildInfo.BuildInfo {
   override def resources = T.sources(
     millSourcePath / "shared" / "src" / "main" / "resources",
   )
-
-  override def generatedSources = T {
-    val antlrSourcePath: Path = antlrSourceRoot().head.path
-    val antlrSources = Seq(PathRef(generateAntlrSources(T.ctx().dest, antlrSourcePath)))
-    val protobufSourcePath: Path = protobufSourceRoot().head.path
-    val protobufSources = Seq(PathRef(generateProtobufSources(T.ctx().dest, protobufSourcePath)))
-    protobufSources ++ antlrSources
-  }
 
   override def buildInfoMembers = T {
     Map[String, String](

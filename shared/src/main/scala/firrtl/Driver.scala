@@ -311,6 +311,9 @@ object Driver {
     }
   }
 
+  def main(): Unit = {
+    execute(Array[String]())
+  }
   def main(args: Array[String]): Unit = {
     execute(args)
   }

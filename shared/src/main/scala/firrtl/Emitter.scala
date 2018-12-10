@@ -2,7 +2,6 @@
 
 package firrtl
 
-import com.typesafe.scalalogging.LazyLogging
 import java.nio.file.{Paths, Files}
 import java.io.{Reader, Writer}
 

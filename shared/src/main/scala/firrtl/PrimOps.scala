@@ -5,7 +5,7 @@ package firrtl
 import firrtl.ir._
 import firrtl.Utils.{min, max, pow_minus_one}
 
-import com.typesafe.scalalogging.LazyLogging
+import firrtl.logging.LazyLogging
 
 /** Definitions and Utility functions for [[ir.PrimOp]]s */
 object PrimOps extends LazyLogging {

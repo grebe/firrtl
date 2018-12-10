@@ -60,8 +60,9 @@ trait IsDeclaration extends HasName with HasInfo
 case class StringLit(string: String) extends FirrtlNode {
   /** Returns an escaped and quoted String */
   def escape: String = {
-    import scala.reflect.runtime.universe._
-    Literal(Constant(string)).toString
+    // import scala.reflect.runtime.universe._
+    // Literal(Constant(string)).toString
+    "" // TODO
   }
   def serialize: String = {
     val str = escape

@@ -2,12 +2,10 @@
 
 package firrtl
 
-import org.antlr.v4.runtime._
-import org.antlr.v4.runtime.atn._
-import com.typesafe.scalalogging.LazyLogging
+import firrtl.logging.LazyLogging
 import firrtl.ir._
 import firrtl.Utils.time
-import firrtl.antlr.{FIRRTLParser, _}
+// import firrtl.antlr.{FIRRTLParser, _}
 
 class ParserException(message: String) extends FIRRTLException(message)
 
@@ -22,41 +20,12 @@ object Parser extends LazyLogging {
 
   /** Parses a file in a given filename and returns a parsed [[Circuit]] */
   def parseFile(filename: String, infoMode: InfoMode): Circuit =
-    parseCharStream(CharStreams.fromFileName(filename), infoMode)
+    PlatformParser.parseFile(filename, infoMode)
 
   /** Parses a String and returns a parsed [[Circuit]] */
   def parseString(text: String, infoMode: InfoMode): Circuit =
-    parseCharStream(CharStreams.fromString(text), infoMode)
+    PlatformParser.parseString(text, infoMode)
 
-  /** Parses a org.antlr.v4.runtime.CharStream and returns a parsed [[Circuit]] */
-  def parseCharStream(charStream: CharStream, infoMode: InfoMode): Circuit = {
-    val (parseTimeMillis, cst) = time {
-      val parser = {
-        val lexer = new FIRRTLLexer(charStream)
-        new FIRRTLParser(new CommonTokenStream(lexer))
-      }
-
-      parser.getInterpreter.setPredictionMode(PredictionMode.SLL)
-
-      // Concrete Syntax Tree
-      val cst = parser.circuit
-
-      val numSyntaxErrors = parser.getNumberOfSyntaxErrors
-      if (numSyntaxErrors > 0) throw new SyntaxErrorsException(s"$numSyntaxErrors syntax error(s) detected")
-      cst
-    }
-
-    val visitor = new Visitor(infoMode)
-    val (visitTimeMillis, visit) = time {
-      visitor.visit(cst)
-    }
-    val ast = visit match {
-      case c: Circuit => c
-      case x => throw new ClassCastException("Error! AST not rooted with Circuit node!")
-    }
-
-    ast
-  }
   /** Takes Iterator over lines of FIRRTL, returns FirrtlNode (root node is Circuit) */
   def parse(lines: Iterator[String], infoMode: InfoMode = UseInfo): Circuit =
     parseString(lines.mkString("\n"), infoMode)

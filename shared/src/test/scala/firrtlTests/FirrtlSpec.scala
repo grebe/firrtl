@@ -4,7 +4,7 @@ package firrtlTests
 
 import java.io._
 
-import com.typesafe.scalalogging.LazyLogging
+import firrtl.logging.LazyLogging
 
 import scala.sys.process._
 import org.scalatest._
