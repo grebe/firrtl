@@ -34,7 +34,7 @@ class LogsInfo3 extends LazyLogging {
     logger.info("logger3")
   }
 }
-class LoggerSpec extends FreeSpec with Matchers with OneInstancePerTest with LazyLogging {
+class LoggerSpec extends FreeSpec with Matchers /*with OneInstancePerTest*/ with LazyLogging {
   "Logger is a simple but powerful logging system" - {
     "Following tests show how global level can control logging" - {
       "only error shows up by default" in {

@@ -26,8 +26,8 @@ val sharedSettings = Seq(
   // when compiling tests under 2.11.12
   // An explicit dependency on junit seems to alleviate this.
   libraryDependencies += "junit" % "junit" % "4.12" % "test",
-  libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test",
-  libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.14.0" % "test",
+  libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.5" % "test",
+  libraryDependencies += "org.scalacheck" %%% "scalacheck" % "1.14.0" % "test",
   libraryDependencies += "com.github.scopt" %%% "scopt" % "3.7.0",
   libraryDependencies += "net.jcazevedo" %% "moultingyaml" % "0.4.0",
   publishMavenStyle := true,
@@ -142,6 +142,9 @@ lazy val firrtl = sbtcrossproject.CrossPlugin.autoImport.crossProject(JSPlatform
   )
   .jsSettings(
     scalaJSModuleKind := ModuleKind.CommonJSModule,
+    jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv(
+      org.scalajs.jsenv.nodejs.NodeJSEnv.Config().withExecutable("nodejs")
+    ),
   )
 
 lazy val firrtlJVM = firrtl.jvm

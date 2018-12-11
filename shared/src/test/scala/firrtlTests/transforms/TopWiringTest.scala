@@ -5,7 +5,6 @@ package transforms
 
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
-import org.scalatest.junit.JUnitRunner
 import scala.io.Source
 import java.io._
 
