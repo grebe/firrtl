@@ -1,4 +1,4 @@
-set -e
+set -ex
 if [ ! -f $INSTALL_DIR/bin/sbt ]; then
   mkdir -p $INSTALL_DIR
   pushd $INSTALL_DIR

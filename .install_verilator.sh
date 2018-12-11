@@ -1,4 +1,4 @@
-set -e
+set -ex
 # Install Verilator (http://www.veripool.org/projects/verilator/wiki/Installing)
 if [ ! -f $INSTALL_DIR/bin/verilator ]; then 
   mkdir -p $INSTALL_DIR
