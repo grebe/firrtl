@@ -7,7 +7,9 @@ import firrtl.CompilerUtils.mergeTransforms
 
 class CompilerUtilsSpec extends FirrtlFlatSpec {
 
-  def genTransform(_inputForm: CircuitForm, _outputForm: CircuitForm) = new Transform {
+  def genTransform(_inputForm: CircuitForm, _outputForm: CircuitForm) = new MyTransform(_inputForm, _outputForm)
+
+  class MyTransform(_inputForm: CircuitForm, _outputForm: CircuitForm) extends Transform {
     def inputForm = _inputForm
     def outputForm = _outputForm
     def execute(state: CircuitState): CircuitState = state

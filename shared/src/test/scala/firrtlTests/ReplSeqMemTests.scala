@@ -12,6 +12,11 @@ import FirrtlCheckers._
 
 class ReplSeqMemSpec extends SimpleTransformSpec {
   def emitter = new LowFirrtlEmitter
+  class MyTransform extends SeqTransform {
+    def inputForm = LowForm
+    def outputForm = LowForm
+    def transforms = Seq(new ConstantPropagation, CommonSubexpressionElimination, new DeadCodeElimination, RemoveEmpty)
+  }
   def transforms = Seq(
     new ChirrtlToHighFirrtl(),
     new IRToWorkingIR(),
@@ -20,11 +25,7 @@ class ReplSeqMemSpec extends SimpleTransformSpec {
     new InferReadWrite(),
     new ReplSeqMem(),
     new MiddleFirrtlToLowFirrtl(),
-    new SeqTransform {
-      def inputForm = LowForm
-      def outputForm = LowForm
-      def transforms = Seq(new ConstantPropagation, CommonSubexpressionElimination, new DeadCodeElimination, RemoveEmpty)
-    }
+    new MyTransform
   )
 
   "ReplSeqMem" should "generate blackbox wrappers for mems of bundle type" in {

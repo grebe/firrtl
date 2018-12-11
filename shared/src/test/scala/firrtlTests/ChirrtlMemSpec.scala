@@ -53,7 +53,9 @@ class ChirrtlMemSpec extends LowTransformSpec {
     }
   }
 
-  def transform = new SeqTransform {
+  def transform = new MyTransform
+
+  class MyTransform extends SeqTransform {
     def inputForm = LowForm
     def outputForm = LowForm
     def transforms = Seq(new ConstantPropagation, MemEnableCheckPass)
