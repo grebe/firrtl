@@ -2,11 +2,9 @@ os:
   - linux
   - osx
 #  - windows
-
 language: scala
 scala:
     - 2.12.4
-
 sudo: false
 
 cache:
