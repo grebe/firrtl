@@ -45,7 +45,6 @@ jobs:
     # same script
     - stage: prepare
       script:
-        #        - bash .install_sbt.sh
         - bash .install_verilator.sh
         - verilator --version
         - bash .install_yosys.sh
