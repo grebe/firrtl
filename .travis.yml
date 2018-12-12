@@ -4,6 +4,10 @@ os:
 #  - windows
 
 language: scala
+scala:
+    - 2.12.4
+    - 2.11.12
+
 sudo: false
 
 cache:
