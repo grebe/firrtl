@@ -31,6 +31,8 @@ before_script:
   - if [ $OLDEST_SHARED == $OLDEST_COMMIT ]; then git fetch --unshallow; fi
 
 before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update          ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install gawk bison; fi
   - bash .install_verilator.sh
   - bash .install_yosys.sh
 
