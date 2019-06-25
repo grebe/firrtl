@@ -97,7 +97,7 @@ class TopWiringTransform extends Transform {
                           Seq[(ComponentName, Type, Boolean, InstPath, String)]],
                           currentmodule: ModuleName, state: CircuitState)(s: Port): CircuitState = s match {
     // If target port, add name and size to to sourceMap
-    case w: Statement with IsDeclaration =>
+    case w: Port with IsDeclaration =>
       if (sourceList.keys.toSeq.contains(ComponentName(w.name, currentmodule))) {
           val (isport, tpe, prefix) = w match {
             case d: Port => (true, d.tpe, sourceList(ComponentName(w.name,currentmodule)))

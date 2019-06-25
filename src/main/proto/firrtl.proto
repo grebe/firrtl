@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package firrtl;
+package fproto2;
 
-option java_package = "firrtl";
+option java_package = "fproto";
 option java_outer_classname = "FirrtlProtos";
 
 message Firrtl {

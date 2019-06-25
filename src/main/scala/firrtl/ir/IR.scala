@@ -39,14 +39,14 @@ case class MultiInfo(infos: Seq[Info]) extends Info {
   def ++(that: Info): Info = if (that == NoInfo) this else MultiInfo(infos :+ that)
 }
 object MultiInfo {
-  def apply(infos: Info*) = {
-    val infosx = infos.filterNot(_ == NoInfo)
-    infosx.size match {
-      case 0 => NoInfo
-      case 1 => infosx.head
-      case _ => new MultiInfo(infosx)
-    }
-  }
+  // def apply(infos: Info*) = {
+  //   val infosx = infos.filterNot(_ == NoInfo)
+  //   infosx.size match {
+  //     case 0 => NoInfo
+  //     case 1 => infosx.head
+  //     case _ => new MultiInfo(infosx)
+  //   }
+  // }
 }
 
 trait HasName {

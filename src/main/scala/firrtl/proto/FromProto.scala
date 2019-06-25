@@ -6,7 +6,7 @@ package proto
 import java.io.{File, FileInputStream, InputStream}
 
 import collection.JavaConverters._
-import FirrtlProtos._
+import fproto.FirrtlProtos._
 import com.google.protobuf.CodedInputStream
 
 object FromProto {
@@ -28,7 +28,7 @@ object FromProto {
   def fromInputStream(is: InputStream): ir.Circuit = {
     val cistream = CodedInputStream.newInstance(is)
     cistream.setRecursionLimit(Integer.MAX_VALUE) // Disable recursion depth check
-    val pb = firrtl.FirrtlProtos.Firrtl.parseFrom(cistream)
+    val pb = fproto.FirrtlProtos.Firrtl.parseFrom(cistream)
     proto.FromProto.convert(pb)
   }
 

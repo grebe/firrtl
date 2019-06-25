@@ -5,7 +5,7 @@ package proto
 
 import java.io.OutputStream
 
-import FirrtlProtos._
+import fproto.FirrtlProtos._
 import Firrtl.Expression.PrimOp.Op
 import com.google.protobuf.{CodedOutputStream, WireFormat}
 import firrtl.PrimOps._
