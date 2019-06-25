@@ -96,7 +96,7 @@ class RemoveWires extends Transform {
           val initDep = Some(reg.init).filter(we(WRef(reg)) != we(_)) // Dependency exists IF reg doesn't init itself
           regInfo(we(WRef(reg))) = reg
           netlist(we(WRef(reg))) = (Seq(reg.clock) ++ resetDep ++ initDep, reg.info)
-        case decl: IsDeclaration => // Keep all declarations except for nodes and non-Analog wires
+        case decl: Statement with IsDeclaration => // Keep all declarations except for nodes and non-Analog wires
           decls += decl
         case con @ Connect(cinfo, lhs, rhs) => kind(lhs) match {
           case WireKind =>

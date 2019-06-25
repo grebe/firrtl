@@ -2,6 +2,7 @@
 
 package firrtl.stage.phases
 
+import firrtl._
 import firrtl.stage._
 
 import firrtl.{AnnotationSeq, EmitAllModulesAnnotation, EmitCircuitAnnotation}

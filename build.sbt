@@ -12,9 +12,9 @@ name := "firrtl"
 
 version := "1.2-SNAPSHOT"
 
-scalaVersion := "2.12.7"
+scalaVersion := "0.16.0-RC3"
 
-crossScalaVersions := Seq("2.12.7", "2.11.12")
+crossScalaVersions := Seq("0.16.0-RC3")
 
 def scalacOptionsVersion(scalaVersion: String): Seq[String] = {
   Seq() ++ {
@@ -28,9 +28,10 @@ def scalacOptionsVersion(scalaVersion: String): Seq[String] = {
   }
 }
 
-addCompilerPlugin(scalafixSemanticdb) // enable SemanticDB
+// addCompilerPlugin(scalafixSemanticdb) // enable SemanticDB
 
 scalacOptions := scalacOptionsVersion(scalaVersion.value) ++ Seq(
+  "-language:implicitConversions",
   "-deprecation",
   "-Yrangepos",          // required by SemanticDB compiler plugin
   "-Ywarn-unused-import" // required by `RemoveUnused` rule
@@ -52,7 +53,7 @@ def javacOptionsVersion(scalaVersion: String): Seq[String] = {
 
 javacOptions ++= javacOptionsVersion(scalaVersion.value)
 
-libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
+// libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0"
 
@@ -74,6 +75,8 @@ libraryDependencies += "net.jcazevedo" %% "moultingyaml" % "0.4.0"
 libraryDependencies += "org.json4s" %% "json4s-native" % "3.6.1"
 
 libraryDependencies += "org.apache.commons" % "commons-text" % "1.6"
+
+libraryDependencies := libraryDependencies.value.map(_.withDottyCompat(scalaVersion.value))
 
 // Java PB
 

@@ -2,6 +2,7 @@
 
 package firrtl.options.phases
 
+import firrtl._
 import firrtl.AnnotationSeq
 import firrtl.annotations.Annotation
 import firrtl.options.{OptionsException, OutputAnnotationFileAnnotation, Phase, TargetDirAnnotation}

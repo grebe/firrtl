@@ -2,6 +2,7 @@
 
 package firrtl.options
 
+import firrtl._
 import firrtl.{AnnotationSeq, Transform}
 
 import scopt.{OptionDef, OptionParser, Read}
@@ -27,7 +28,7 @@ final class ShellOption[A: Read] (
     */
   final def addOption(p: OptionParser[AnnotationSeq]): Unit = {
     val f = Seq(
-      (p: OptionDef[A, AnnotationSeq]) => p.action( (x, c) => toAnnotationSeq(x).reverse ++ c ),
+      (p: OptionDef[A, AnnotationSeq]) => p.action( (x, c) => AnnotationSeq(toAnnotationSeq(x).reverse ++ c) ),
       (p: OptionDef[A, AnnotationSeq]) => p.text(helpText),
       (p: OptionDef[A, AnnotationSeq]) => p.unbounded()) ++
       shortOption.map( a => (p: OptionDef[A, AnnotationSeq]) => p.abbr(a) ) ++

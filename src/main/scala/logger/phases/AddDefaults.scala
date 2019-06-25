@@ -2,6 +2,8 @@
 
 package logger.phases
 
+import delegate firrtl._
+
 import firrtl.AnnotationSeq
 import firrtl.options.Phase
 
@@ -20,8 +22,10 @@ private [logger] object AddDefaults extends Phase {
       case _: LogLevelAnnotation => ll = false
       case _                     =>
     }
-    annotations ++
+    AnnotationSeq(
+      annotations++
       (if (ll) Seq(LogLevelAnnotation()) else Seq() )
+    )
   }
 
 }

@@ -1,5 +1,7 @@
 // See LICENSE for license details.
 
+import delegate firrtl._
+
 import firrtl.AnnotationSeq
 import firrtl.options.OptionsView
 

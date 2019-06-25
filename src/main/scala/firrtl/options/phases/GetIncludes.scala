@@ -4,6 +4,7 @@ package firrtl.options.phases
 
 import net.jcazevedo.moultingyaml._
 
+import firrtl._
 import firrtl.AnnotationSeq
 import firrtl.annotations.{AnnotationFileNotFoundException, JsonProtocol, LegacyAnnotation}
 import firrtl.annotations.AnnotationYamlProtocol._
@@ -24,7 +25,7 @@ class GetIncludes extends Phase {
   private def readAnnotationsFromFile(filename: String): AnnotationSeq = {
     val file = new File(filename).getCanonicalFile
     if (!file.exists) { throw new AnnotationFileNotFoundException(file) }
-    JsonProtocol.deserializeTry(file).recoverWith { case jsonException =>
+    JsonProtocol.deserializeTry(new java.io.FileInputStream(file)).recoverWith { case jsonException =>
       // Try old protocol if new one fails
       Try {
         val yaml = io.Source.fromFile(file).getLines().mkString("\n").parseYaml
@@ -46,7 +47,7 @@ class GetIncludes extends Phase {
     */
   private def getIncludes(includeGuard: mutable.Set[String] = mutable.Set())
                          (annos: AnnotationSeq): AnnotationSeq = {
-    annos.flatMap {
+    AnnotationSeq(annos.flatMap {
       case a @ InputAnnotationFileAnnotation(value) =>
         if (includeGuard.contains(value)) {
           StageUtils.dramaticWarning(s"Annotation file ($value) already included! (Did you include it more than once?)")
@@ -56,7 +57,7 @@ class GetIncludes extends Phase {
           getIncludes(includeGuard)(readAnnotationsFromFile(value))
         }
       case x => Seq(x)
-    }
+    })
   }
 
   def transform(annotations: AnnotationSeq): AnnotationSeq = getIncludes()(annotations)

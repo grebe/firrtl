@@ -2,6 +2,8 @@
 
 package firrtl
 
+import firrtl._
+
 import firrtl.ir._
 import firrtl.annotations._
 import firrtl.Mappers._
@@ -73,7 +75,7 @@ class AddDescriptionNodes extends Transform {
 
   def onStmt(compMap: Map[String, Seq[String]])(stmt: Statement): Statement = {
     stmt.map(onStmt(compMap)) match {
-      case d: IsDeclaration if compMap.contains(d.name) =>
+      case d: Statement with IsDeclaration if compMap.contains(d.name) =>
         DescribedStmt(DocString(StringLit.unescape(compMap(d.name).mkString("\n\n"))), d)
       case other => other
     }

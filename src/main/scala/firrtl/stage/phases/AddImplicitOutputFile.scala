@@ -2,9 +2,10 @@
 
 package firrtl.stage.phases
 
+import firrtl._
 import firrtl.{AnnotationSeq, EmitAllModulesAnnotation}
-import firrtl.options.{Phase, Viewer}
-import firrtl.stage.{FirrtlOptions, OutputFileAnnotation}
+import firrtl.options._
+import firrtl.stage._
 
 /** [[firrtl.options.Phase Phase]] that adds an [[OutputFileAnnotation]] if one does not already exist.
   *
@@ -29,6 +30,6 @@ class AddImplicitOutputFile extends Phase {
           .firrtlCircuit
           .map(_.main)
           .getOrElse("a")
-        OutputFileAnnotation(topName) +: annotations
+        AnnotationSeq(OutputFileAnnotation(topName) +: annotations)
       }
 }

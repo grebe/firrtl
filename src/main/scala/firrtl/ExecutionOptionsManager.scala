@@ -41,13 +41,13 @@ abstract class HasParser(applicationName: String) {
     * By default scopt calls sys.exit when --help is in options, this defeats that
     */
   def doNotExitOnHelp(): Unit = {
-    parser.terminateOnExit = false
+    // parser.terminateOnExit = false
   }
   /**
     * By default scopt calls sys.exit when --help is in options, this un-defeats doNotExitOnHelp
     */
   def exitOnHelp(): Unit = {
-    parser.terminateOnExit = true
+    // parser.terminateOnExit = true
   }}
 
 /**
@@ -77,13 +77,15 @@ case class CommonOptions(
     }
   }
 
-  def toAnnotations: AnnotationSeq = (if (topName.nonEmpty) Seq(TopNameAnnotation(topName)) else Seq()) ++
+  def toAnnotations: AnnotationSeq = AnnotationSeq(
+    (if (topName.nonEmpty) Seq(TopNameAnnotation(topName)) else Seq()) ++
     (if (targetDirName != ".") Some(TargetDirAnnotation(targetDirName)) else None) ++
     Some(LogLevelAnnotation(globalLogLevel)) ++
     (if (logToFile) { Some(LogFileAnnotation(None)) } else { None }) ++
     (if (logClassNames) { Some(LogClassNamesAnnotation) } else { None }) ++
     classLogLevels.map{ case (c, v) => ClassLogLevelAnnotation(c, v) } ++
     programArgs.map( a => ProgramArgsAnnotation(a) )
+  )
 }
 
 @deprecated("Specify command line arguments in an Annotation mixing in HasScoptOptions", "1.2")
@@ -312,7 +314,8 @@ extends ComposableOptions {
       StageUtils.dramaticWarning("User set FirrtlExecutionOptions.inferRW, but inferRW has no effect!")
     }
 
-    (if (inputFileNameOverride.nonEmpty) Seq(FirrtlFileAnnotation(inputFileNameOverride)) else Seq()) ++
+    AnnotationSeq(
+      (if (inputFileNameOverride.nonEmpty) Seq(FirrtlFileAnnotation(inputFileNameOverride)) else Seq()) ++
       (if (outputFileNameOverride.nonEmpty) { Some(OutputFileAnnotation(outputFileNameOverride)) } else { None }) ++
       Some(CompilerAnnotation(compilerName)) ++
       Some(InfoModeAnnotation(infoModeName)) ++
@@ -326,6 +329,7 @@ extends ComposableOptions {
       (if (noDCE) { Some(NoDCEAnnotation) } else { None }) ++
       annotationFileNames.map(InputAnnotationFileAnnotation(_)) ++
       firrtlCircuit.map(FirrtlCircuitAnnotation(_))
+    )
   }
 }
 

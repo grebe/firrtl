@@ -2,6 +2,7 @@
 
 package logger
 
+import firrtl.AnnotationSeq
 import firrtl.annotations.{Annotation, NoTargetAnnotation}
 import firrtl.options.{HasShellOptions, ShellOption}
 
@@ -21,7 +22,7 @@ object LogLevelAnnotation extends HasShellOptions {
   val options = Seq(
     new ShellOption[String](
       longOption = "log-level",
-      toAnnotationSeq = (a: String) => Seq(LogLevelAnnotation(LogLevel(a))),
+      toAnnotationSeq = (a: String) => AnnotationSeq(Seq(LogLevelAnnotation(LogLevel(a)))),
       helpText = s"Set global logging verbosity (default: ${new LoggerOptions().globalLogLevel}",
       shortOption = Some("ll"),
       helpValueName = Some("{error|warn|info|debug|trace}") ) )
@@ -40,10 +41,10 @@ object ClassLogLevelAnnotation extends HasShellOptions {
   val options = Seq(
     new ShellOption[Seq[String]](
       longOption = "class-log-level",
-      toAnnotationSeq = (a: Seq[String]) => a.map { aa =>
+      toAnnotationSeq = (a: Seq[String]) => AnnotationSeq(a.map { aa =>
         val className :: levelName :: _ = aa.split(":").toList
         val level = LogLevel(levelName)
-        ClassLogLevelAnnotation(className, level) },
+        ClassLogLevelAnnotation(className, level) }),
       helpText = "Set per-class logging verbosity",
       shortOption = Some("cll"),
       helpValueName = Some("<FullClassName:{error|warn|info|debug|trace}>...") ) )
@@ -61,7 +62,7 @@ object LogFileAnnotation extends HasShellOptions {
   val options = Seq(
     new ShellOption[String](
       longOption = "log-file",
-      toAnnotationSeq = (a: String) => Seq(LogFileAnnotation(Some(a))),
+      toAnnotationSeq = (a: String) => AnnotationSeq(Seq(LogFileAnnotation(Some(a)))),
       helpText = "Log to a file instead of STDOUT",
       helpValueName = Some("<file>") ) )
 
@@ -75,7 +76,7 @@ case object LogClassNamesAnnotation extends NoTargetAnnotation with LoggerOption
   val options = Seq(
     new ShellOption[Unit](
       longOption = "log-class-names",
-      toAnnotationSeq = (a: Unit) => Seq(LogClassNamesAnnotation),
+      toAnnotationSeq = (a: Unit) => AnnotationSeq(Seq(LogClassNamesAnnotation)),
       helpText = "Show class names and log level in logging output",
       shortOption = Some("lcn") ) )
 

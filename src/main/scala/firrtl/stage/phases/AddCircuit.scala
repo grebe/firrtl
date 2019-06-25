@@ -2,6 +2,7 @@
 
 package firrtl.stage.phases
 
+import firrtl._
 import firrtl.stage._
 
 import firrtl.{AnnotationSeq, Parser}
@@ -50,10 +51,10 @@ class AddCircuit extends Phase {
     */
   def transform(annotations: AnnotationSeq): AnnotationSeq = {
     lazy val info = infoMode(annotations)
-    annotations.map {
+    AnnotationSeq(annotations.map {
       case a: CircuitOption => a.toCircuit(info)
       case a                => a
-    }
+    })
   }
 
 }

@@ -2,6 +2,8 @@
 
 package firrtl.stage.phases
 
+import firrtl._
+import firrtl.options._
 import firrtl.stage._
 
 import firrtl.{AnnotationSeq, EmitAllModulesAnnotation, EmitCircuitAnnotation, FirrtlExecutionResult, Parser}
@@ -132,7 +134,7 @@ object DriverCompatibility {
             if (new File(filename).exists) {
               StageUtils.dramaticWarning(
                 s"Implicit reading of the annotation file is deprecated! Use an explict --annotation-file argument.")
-              annotations :+ InputAnnotationFileAnnotation(filename)
+              AnnotationSeq(annotations :+ InputAnnotationFileAnnotation(filename))
             } else {
               annotations
             }
@@ -166,7 +168,7 @@ object DriverCompatibility {
       } else if (main.nonEmpty) {
         StageUtils.dramaticWarning(
           s"Implicit reading of the input file is deprecated! Use an explict --input-file argument.")
-        FirrtlFileAnnotation(Viewer[StageOptions].view(annotations).getBuildFileName(s"${main.get}.fir")) +: annotations
+        AnnotationSeq(FirrtlFileAnnotation(Viewer[StageOptions].view(annotations).getBuildFileName(s"${main.get}.fir")) +: annotations)
       } else {
         annotations
       }
@@ -187,13 +189,13 @@ object DriverCompatibility {
     def transform(annotations: AnnotationSeq): AnnotationSeq = {
       val splitModules = annotations.collectFirst{ case a: EmitOneFilePerModuleAnnotation.type => a }.isDefined
 
-      annotations.flatMap {
+      AnnotationSeq(annotations.flatMap {
         case a @ CompilerAnnotation(c) =>
           val b = RunFirrtlTransformAnnotation(a.compiler.emitter)
-          if (splitModules) { Seq(a, b, EmitAllModulesAnnotation(c.emitter.getClass)) }
-          else              { Seq(a, b, EmitCircuitAnnotation   (c.emitter.getClass)) }
+          if (splitModules) { Seq(a, b, EmitAllModulesAnnotation(c.emitter.getClass.asInstanceOf[Class[_ <: Emitter]])) }
+          else              { Seq(a, b, EmitCircuitAnnotation   (c.emitter.getClass.asInstanceOf[Class[_ <: Emitter]])) }
         case a => Seq(a)
-      }
+      })
     }
 
   }
@@ -213,7 +215,7 @@ object DriverCompatibility {
       val top = topName(annotations)
 
       if (!hasOutputFile && top.isDefined) {
-        OutputFileAnnotation(top.get) +: annotations
+        AnnotationSeq(OutputFileAnnotation(top.get) +: annotations)
       } else {
         annotations
       }

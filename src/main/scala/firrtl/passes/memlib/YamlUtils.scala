@@ -8,10 +8,10 @@ import java.io.{CharArrayWriter, File, PrintWriter}
 
 object CustomYAMLProtocol extends DefaultYamlProtocol {
   // bottom depends on top
-  implicit val _pin = yamlFormat1(Pin)
-  implicit val _source = yamlFormat2(Source)
-  implicit val _top = yamlFormat1(Top)
-  implicit val _configs = yamlFormat3(Config)
+  implicit val _pin: YamlFormat[Pin] = yamlFormat1(Pin)
+  implicit val _source: YamlFormat[Source] = yamlFormat2(Source)
+  implicit val _top: YamlFormat[Top] = yamlFormat1(Top)
+  implicit val _configs: YamlFormat[Config] = yamlFormat3(Config)
 }
 
 case class Pin(name: String)

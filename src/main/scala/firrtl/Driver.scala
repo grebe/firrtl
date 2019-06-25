@@ -109,7 +109,7 @@ object Driver {
         throw new AnnotationFileNotFoundException(file)
       }
       // Try new protocol first
-      JsonProtocol.deserializeTry(file).recoverWith { case jsonException =>
+      JsonProtocol.deserializeTry(new java.io.FileInputStream(file)).recoverWith { case jsonException =>
         // Try old protocol if new one fails
         Try {
           val yaml = io.Source.fromFile(file).getLines().mkString("\n").parseYaml

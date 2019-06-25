@@ -180,7 +180,7 @@ object RunFirrtlTransformAnnotation extends HasShellOptions {
   val options = Seq(
     new ShellOption[Seq[String]](
       longOption = "custom-transforms",
-      toAnnotationSeq = _.map(txName =>
+      toAnnotationSeq = x => AnnotationSeq(x.map(txName =>
         try {
           val tx = Class.forName(txName).asInstanceOf[Class[_ <: Transform]].newInstance()
           RunFirrtlTransformAnnotation(tx)
@@ -190,7 +190,7 @@ object RunFirrtlTransformAnnotation extends HasShellOptions {
           case e: InstantiationException => throw new OptionsException(
             s"Unable to create instance of Transform $txName (is this an anonymous class?)", e)
           case e: Throwable => throw new OptionsException(
-            s"Unknown error when instantiating class $txName", e) }),
+            s"Unknown error when instantiating class $txName", e) })),
       helpText = "Run these transforms during compilation",
       shortOption = Some("fct"),
       helpValueName = Some("<package>.<class>") ) )

@@ -10,10 +10,10 @@ import language.implicitConversions
 object Foreachers {
 
   /** Statement Foreachers */
-  private trait StmtForMagnet {
+  trait StmtForMagnet {
     def foreach(stmt: Statement): Unit
   }
-  private object StmtForMagnet {
+  object StmtForMagnet {
     implicit def forStmt(f: Statement => Unit): StmtForMagnet = new StmtForMagnet {
       def foreach(stmt: Statement): Unit = stmt foreachStmt f
     }
@@ -36,10 +36,10 @@ object Foreachers {
   }
 
   /** Expression Foreachers */
-  private trait ExprForMagnet {
+  trait ExprForMagnet {
     def foreach(expr: Expression): Unit
   }
-  private object ExprForMagnet {
+  object ExprForMagnet {
     implicit def forExpr(f: Expression => Unit): ExprForMagnet = new ExprForMagnet {
       def foreach(expr: Expression): Unit = expr foreachExpr f
     }
@@ -55,10 +55,10 @@ object Foreachers {
   }
 
   /** Type Foreachers */
-  private trait TypeForMagnet {
+  trait TypeForMagnet {
     def foreach(tpe: Type): Unit
   }
-  private object TypeForMagnet {
+  object TypeForMagnet {
     implicit def forType(f: Type => Unit): TypeForMagnet = new TypeForMagnet {
       def foreach(tpe: Type): Unit = tpe foreachType f
     }
@@ -71,10 +71,10 @@ object Foreachers {
   }
 
   /** Module Foreachers */
-  private trait ModuleForMagnet {
+  trait ModuleForMagnet {
     def foreach(module: DefModule): Unit
   }
-  private object ModuleForMagnet {
+  object ModuleForMagnet {
     implicit def forStmt(f: Statement => Unit): ModuleForMagnet = new ModuleForMagnet {
       def foreach(module: DefModule): Unit = module foreachStmt f
     }
@@ -93,10 +93,10 @@ object Foreachers {
   }
 
   /** Circuit Foreachers */
-  private trait CircuitForMagnet {
+  trait CircuitForMagnet {
     def foreach(module: Circuit): Unit
   }
-  private object CircuitForMagnet {
+  object CircuitForMagnet {
     implicit def forModules(f: DefModule => Unit): CircuitForMagnet = new CircuitForMagnet {
       def foreach(circuit: Circuit): Unit = circuit foreachModule f
     }

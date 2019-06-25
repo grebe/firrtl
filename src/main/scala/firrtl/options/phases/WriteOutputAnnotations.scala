@@ -2,7 +2,9 @@
 
 package firrtl.options.phases
 
+import firrtl._
 import firrtl.AnnotationSeq
+import delegate firrtl.options._
 import firrtl.annotations.{DeletedAnnotation, JsonProtocol}
 import firrtl.options.{Phase, StageOptions, Unserializable, Viewer}
 
@@ -26,7 +28,7 @@ class WriteOutputAnnotations extends Phase {
       case None =>
       case Some(file) =>
         val pw = new PrintWriter(sopts.getBuildFileName(file, Some(".anno.json")))
-        pw.write(JsonProtocol.serialize(serializable))
+        pw.write(JsonProtocol.serialize(AnnotationSeq(serializable)))
         pw.close()
     }
 

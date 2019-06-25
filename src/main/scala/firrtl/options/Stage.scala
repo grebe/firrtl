@@ -67,7 +67,7 @@ class StageMain(val stage: Stage) {
     * @param args command line arguments
     */
   final def main(args: Array[String]): Unit = try {
-    stage.execute(args, Seq.empty)
+    stage.execute(args, AnnotationSeq(Seq()))
   } catch {
     case a: OptionsException =>
       StageUtils.dramaticUsageError(a.message)

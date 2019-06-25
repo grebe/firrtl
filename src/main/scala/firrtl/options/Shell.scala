@@ -2,6 +2,7 @@
 
 package firrtl.options
 
+import firrtl._
 import firrtl.AnnotationSeq
 import firrtl.transforms.NoCircuitDedupAnnotation
 

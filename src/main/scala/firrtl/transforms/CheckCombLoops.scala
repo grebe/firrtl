@@ -255,7 +255,7 @@ class CheckCombLoops extends Transform with RegisteredTransform {
       val sources = tos.map(x => ComponentName(x.name, mn))
       CombinationalPath(sink, sources.toSeq)
     }
-    (state.copy(annotations = state.annotations ++ annos), errors, simplifiedModuleGraphs)
+    (state.copy(annotations = AnnotationSeq(state.annotations ++ annos)), errors, simplifiedModuleGraphs)
   }
 
   /**

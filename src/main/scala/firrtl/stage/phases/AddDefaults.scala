@@ -2,6 +2,7 @@
 
 package firrtl.stage.phases
 
+import firrtl._
 import firrtl.AnnotationSeq
 import firrtl.options.{Phase, TargetDirAnnotation}
 import firrtl.transforms.BlackBoxTargetDirAnno
@@ -27,10 +28,12 @@ class AddDefaults extends Phase {
       .collectFirst { case d: TargetDirAnnotation => d }
       .getOrElse(TargetDirAnnotation()).directory
 
-    (if (bb) Seq(BlackBoxTargetDirAnno(targetDir)) else Seq() ) ++
+    AnnotationSeq(
+      (if (bb) Seq(BlackBoxTargetDirAnno(targetDir)) else Seq() ) ++
       (if (c) Seq(CompilerAnnotation(default.compiler)) else Seq() ) ++
       (if (im) Seq(InfoModeAnnotation()) else Seq() ) ++
       annotations
+    )
   }
 
 }

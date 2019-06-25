@@ -252,7 +252,7 @@ class GroupComponents extends firrtl.Transform {
     def onStmt(s: Statement): Statement = {
       s match {
         // Sink is in a group
-        case r: IsDeclaration if byNode(r.name) != "" =>
+        case r: Statement with IsDeclaration if byNode(r.name) != "" =>
           val topStmts = mutable.ArrayBuffer[Statement]()
           val group = byNode(r.name)
           groupStatements(group) += r mapExpr inGroupFixExps(group, topStmts)
@@ -316,7 +316,7 @@ class GroupComponents extends firrtl.Transform {
     }
     def onStmt(stmt: Statement): Unit = stmt match {
       case w: WDefInstance =>
-      case h: IsDeclaration =>
+      case h: Statement with IsDeclaration =>
         bidirGraph.addVertex(h.name)
         h map onExpr(WRef(h.name))
       case Attach(_, exprs) => // Add edge between each expression

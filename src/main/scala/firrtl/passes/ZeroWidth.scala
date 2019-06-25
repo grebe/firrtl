@@ -83,7 +83,7 @@ object ZeroWidth extends Transform {
       t
     }
     x match {
-      case s: Statement => s map onType(s.name)
+      case s: Statement with IsDeclaration => s map onType(s.name)
       case Port(_, name, _, t) => onType(name)(t)
     }
     removedNames

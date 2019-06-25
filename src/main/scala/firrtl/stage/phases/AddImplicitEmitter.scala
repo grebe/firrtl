@@ -2,6 +2,7 @@
 
 package firrtl.stage.phases
 
+import firrtl._
 import firrtl.{AnnotationSeq, EmitAnnotation, EmitCircuitAnnotation}
 import firrtl.stage.{CompilerAnnotation, RunFirrtlTransformAnnotation}
 import firrtl.options.Phase
@@ -16,12 +17,12 @@ class AddImplicitEmitter extends Phase {
     val compiler = annos.collectFirst{ case CompilerAnnotation(a) => a }
 
     if (emitter.isEmpty && compiler.nonEmpty) {
-      annos.flatMap{
+      AnnotationSeq(annos.flatMap{
         case a: CompilerAnnotation => Seq(a,
                                           RunFirrtlTransformAnnotation(compiler.get.emitter),
-                                          EmitCircuitAnnotation(compiler.get.emitter.getClass))
+                                          EmitCircuitAnnotation(compiler.get.emitter.getClass.asInstanceOf[Class[_ <: Emitter]]))
         case a => Some(a)
-      }
+      })
     } else {
       annos
     }

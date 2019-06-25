@@ -2,6 +2,9 @@
 
 package firrtl.stage.phases
 
+import firrtl.options._
+import firrtl.stage._
+import delegate firrtl._
 import firrtl.{AnnotationSeq, EmittedModuleAnnotation, EmittedCircuitAnnotation}
 import firrtl.options.{Phase, StageOptions, Viewer}
 import firrtl.stage.FirrtlOptions
@@ -31,7 +34,7 @@ class WriteEmitted extends Phase {
     val fopts = Viewer[FirrtlOptions].view(annotations)
     val sopts = Viewer[StageOptions].view(annotations)
 
-    annotations.flatMap {
+    AnnotationSeq(annotations.flatMap {
       case a: EmittedModuleAnnotation[_] =>
         val pw = new PrintWriter(sopts.getBuildFileName(a.value.name, Some(a.value.outputSuffix)))
         pw.write(a.value.value)
@@ -44,7 +47,7 @@ class WriteEmitted extends Phase {
         pw.close()
         None
       case a => Some(a)
-    }
+    })
 
   }
 }

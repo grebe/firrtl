@@ -151,7 +151,7 @@ sealed abstract class FirrtlEmitter(form: CircuitForm) extends Transform with Em
         emitAllModules(state.circuit) map (EmittedFirrtlModuleAnnotation(_))
       case _ => Seq()
     }
-    state.copy(annotations = newAnnos ++ state.annotations)
+    state.copy(annotations = AnnotationSeq(newAnnos ++ state.annotations))
   }
 
   // Old style, deprecated
@@ -448,7 +448,7 @@ class VerilogEmitter extends SeqTransform with Emitter {
                       m: Module,
                       moduleMap: Map[String, DefModule])(implicit writer: Writer) {
 
-    def this(m: Module, moduleMap: Map[String, DefModule])(implicit writer: Writer) {
+    def this(m: Module, moduleMap: Map[String, DefModule])(implicit writer: Writer) = {
       this(EmptyDescription, Map.empty, m, moduleMap)(writer)
     }
 
@@ -999,7 +999,7 @@ class VerilogEmitter extends SeqTransform with Emitter {
         }
       case _ => Seq()
     }
-    state.copy(annotations = newAnnos ++ state.annotations)
+    state.copy(annotations = AnnotationSeq(newAnnos ++ state.annotations))
   }
 }
 

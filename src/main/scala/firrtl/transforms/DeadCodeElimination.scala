@@ -224,7 +224,7 @@ class DeadCodeElimination extends Transform with ResolvedAnnotationPaths with Re
               renames.delete(inst.name)
               EmptyStmt
           }
-        case decl: IsDeclaration =>
+        case decl: Statement with IsDeclaration =>
           val node = LogicNode(mod.name, decl.name)
           if (deadNodes.contains(node)) {
             logger.debug(deleteMsg(decl))

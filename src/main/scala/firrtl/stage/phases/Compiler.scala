@@ -2,6 +2,7 @@
 
 package firrtl.stage.phases
 
+import firrtl._
 import firrtl.{AnnotationSeq, ChirrtlForm, CircuitState, Compiler => FirrtlCompiler, Transform, seqToAnnoSeq}
 import firrtl.options.{Phase, PhasePrerequisiteException, Translator}
 import firrtl.stage.{CompilerAnnotation, FirrtlCircuitAnnotation,
@@ -62,13 +63,13 @@ class Compiler extends Phase with Translator[AnnotationSeq, Seq[CompilerRun]] {
           d
         case annotation =>
           val state = c(0).stateIn
-          c(0) = c(0).copy(stateIn = state.copy(annotations = annotation +: state.annotations))
+          c(0) = c(0).copy(stateIn = state.copy(annotations = AnnotationSeq(annotation +: state.annotations)))
           d
       }
       case (d, a) if !foundFirstCircuit => a match {
         case RunFirrtlTransformAnnotation(transform) => d.copy(transforms = transform +: d.transforms)
         case CompilerAnnotation(compiler) => d.copy(compiler = Some(compiler))
-        case annotation => d.copy(annotations = annotation +: d.annotations)
+        case annotation => d.copy(annotations = AnnotationSeq(annotation +: d.annotations))
       }
     }
     c
@@ -78,7 +79,7 @@ class Compiler extends Phase with Translator[AnnotationSeq, Seq[CompilerRun]] {
     * removed ([[CompilerAnnotation]]s and [[RunFirrtlTransformAnnotation]]s).
     */
   protected def bToA(b: Seq[CompilerRun]): AnnotationSeq =
-    b.flatMap( bb => FirrtlCircuitAnnotation(bb.stateOut.get.circuit) +: bb.stateOut.get.annotations )
+    AnnotationSeq(b.flatMap( bb => FirrtlCircuitAnnotation(bb.stateOut.get.circuit) +: bb.stateOut.get.annotations ))
 
   /** Run the FIRRTL compiler some number of times. If more than one run is specified, a parallel collection will be
     * used.

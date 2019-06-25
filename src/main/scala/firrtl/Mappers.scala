@@ -8,10 +8,10 @@ import firrtl.ir._
 object Mappers {
 
   // ********** Stmt Mappers **********
-  private trait StmtMagnet {
+  trait StmtMagnet {
     def map(stmt: Statement): Statement
   }
-  private object StmtMagnet {
+  object StmtMagnet {
     implicit def forStmt(f: Statement => Statement): StmtMagnet = new StmtMagnet {
       override def map(stmt: Statement): Statement = stmt mapStmt f
     }
@@ -34,10 +34,10 @@ object Mappers {
   }
 
   // ********** Expression Mappers **********
-  private trait ExprMagnet {
+  trait ExprMagnet {
     def map(expr: Expression): Expression
   }
-  private object ExprMagnet {
+  object ExprMagnet {
     implicit def forExpr(f: Expression => Expression): ExprMagnet = new ExprMagnet {
       override def map(expr: Expression): Expression = expr mapExpr f
     }
@@ -53,10 +53,10 @@ object Mappers {
   }
 
   // ********** Type Mappers **********
-  private trait TypeMagnet {
+  trait TypeMagnet {
     def map(tpe: Type): Type
   }
-  private object TypeMagnet {
+  object TypeMagnet {
     implicit def forType(f: Type => Type): TypeMagnet = new TypeMagnet {
       override def map(tpe: Type): Type = tpe mapType f
     }
@@ -69,10 +69,10 @@ object Mappers {
   }
 
   // ********** Width Mappers **********
-  private trait WidthMagnet {
+  trait WidthMagnet {
     def map(width: Width): Width
   }
-  private object WidthMagnet {
+  object WidthMagnet {
     implicit def forWidth(f: Width => Width): WidthMagnet = new WidthMagnet {
       override def map(width: Width): Width = width match {
         case mapable: HasMapWidth => mapable mapWidth f // WIR
@@ -85,10 +85,10 @@ object Mappers {
   }
 
   // ********** Module Mappers **********
-  private trait ModuleMagnet {
+  trait ModuleMagnet {
     def map(module: DefModule): DefModule
   }
-  private object ModuleMagnet {
+  object ModuleMagnet {
     implicit def forStmt(f: Statement => Statement): ModuleMagnet = new ModuleMagnet {
       override def map(module: DefModule): DefModule = module mapStmt f
     }
@@ -107,10 +107,10 @@ object Mappers {
   } 
 
   // ********** Circuit Mappers **********
-  private trait CircuitMagnet {
+  trait CircuitMagnet {
     def map(module: Circuit): Circuit
   }
-  private object CircuitMagnet {
+  object CircuitMagnet {
     implicit def forModules(f: DefModule => DefModule): CircuitMagnet = new CircuitMagnet {
       override def map(circuit: Circuit): Circuit = circuit mapModule f
     }

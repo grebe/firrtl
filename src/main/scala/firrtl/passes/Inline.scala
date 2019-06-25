@@ -30,7 +30,7 @@ class InlineInstances extends Transform with RegisteredTransform {
   val options = Seq(
     new ShellOption[Seq[String]](
       longOption = "inline",
-      toAnnotationSeq = (a: Seq[String]) => a.map { value =>
+      toAnnotationSeq = (a: Seq[String]) => AnnotationSeq(a.map { value =>
         value.split('.') match {
           case Array(circuit) =>
             InlineAnnotation(CircuitName(circuit))
@@ -39,7 +39,7 @@ class InlineInstances extends Transform with RegisteredTransform {
           case Array(circuit, module, inst) =>
             InlineAnnotation(ComponentName(inst, ModuleName(module, CircuitName(circuit))))
         }
-      } :+ RunFirrtlTransformAnnotation(new InlineInstances),
+      } :+ RunFirrtlTransformAnnotation(new InlineInstances)),
       helpText = "Inline selected modules",
       shortOption = Some("fil"),
       helpValueName = Some("<circuit>[.<module>[.<instance>]][,...]") ) )

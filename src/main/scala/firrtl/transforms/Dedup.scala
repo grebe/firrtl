@@ -147,7 +147,7 @@ object DedupModules {
             retype(d.name + ";&*^$")(d.dataType)
         }
         d.copy(dataType = newDataType) map rename map reinfo
-      case h: IsDeclaration =>
+      case h: Statement with IsDeclaration =>
         val temp = h map rename map retype(h.name) map reinfo
         if(renameExps) temp map onExp else temp
       case other =>

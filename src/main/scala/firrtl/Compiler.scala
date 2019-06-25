@@ -59,7 +59,7 @@ case class CircuitState(
     * @return
     */
   def resolvePaths(targets: Seq[CompleteTarget]): CircuitState = {
-    val newCS = new EliminateTargetPaths().runTransform(this.copy(annotations = ResolvePaths(targets) +: annotations ))
+    val newCS = new EliminateTargetPaths().runTransform(this.copy(annotations = AnnotationSeq(ResolvePaths(targets) +: annotations) ))
     newCS.copy(form = form)
   }
 
@@ -77,7 +77,9 @@ case class CircuitState(
     * @return
     */
   def getAnnotationsOf(annoClasses: Class[_]*): AnnotationSeq = {
-    annotations.collect { case a if annoClasses.contains(a.getClass) => a }
+    // TODO
+    Seq[Annotation]()
+    // annotations.collect { case a if annoClasses.contains(a.getClass) => a }
   }
 }
 
@@ -114,7 +116,7 @@ sealed abstract class CircuitForm(private val value: Int) extends Ordered[Circui
   *
   * See [[CDefMemory]] and [[CDefMPort]]
   */
-final case object ChirrtlForm extends CircuitForm(value = 3) {
+case object ChirrtlForm extends CircuitForm(value = 3) {
   val outputSuffix: String = ".fir"
 }
 
@@ -125,7 +127,7 @@ final case object ChirrtlForm extends CircuitForm(value = 3) {
   *
   * Also see [[firrtl.ir]]
   */
-final case object HighForm extends CircuitForm(2) {
+case object HighForm extends CircuitForm(2) {
   val outputSuffix: String = ".hi.fir"
 }
 
@@ -136,7 +138,7 @@ final case object HighForm extends CircuitForm(2) {
   *  - All whens must be removed
   *  - There can only be a single connection to any element
   */
-final case object MidForm extends CircuitForm(1) {
+case object MidForm extends CircuitForm(1) {
   val outputSuffix: String = ".mid.fir"
 }
 
@@ -146,7 +148,7 @@ final case object MidForm extends CircuitForm(1) {
   *  - All aggregate types (vector/bundle) must have been removed
   *  - All implicit truncations must be made explicit
   */
-final case object LowForm extends CircuitForm(0) {
+case object LowForm extends CircuitForm(0) {
   val outputSuffix: String = ".lo.fir"
 }
 
@@ -161,7 +163,7 @@ final case object LowForm extends CircuitForm(0) {
   * TODO(azidar): Replace with PreviousForm, which more explicitly encodes
   * this requirement.
   */
-final case object UnknownForm extends CircuitForm(-1) {
+case object UnknownForm extends CircuitForm(-1) {
   override def compare(that: CircuitForm): Int = { sys.error("Illegal to compare UnknownForm"); 0 }
 
   val outputSuffix: String = ".unknown.fir"
@@ -332,7 +334,7 @@ object CompilerUtils extends LazyLogging {
         case ChirrtlForm =>
           Seq(new ChirrtlToHighFirrtl) ++ getLoweringTransforms(HighForm, outputForm)
         case HighForm =>
-          Seq(new IRToWorkingIR, new ResolveAndCheck, new transforms.DedupModules,
+          Seq(new IRToWorkingIR, new ResolveAndCheck, new firrtl.transforms.DedupModules,
               new HighFirrtlToMiddleFirrtl) ++ getLoweringTransforms(MidForm, outputForm)
         case MidForm => Seq(new MiddleFirrtlToLowFirrtl) ++ getLoweringTransforms(LowForm, outputForm)
         case LowForm => throwInternalError("getLoweringTransforms - LowForm") // should be caught by if above
@@ -449,8 +451,8 @@ trait Compiler extends LazyLogging {
     */
   def compileAndEmit(state: CircuitState,
                      customTransforms: Seq[Transform] = Seq.empty): CircuitState = {
-    val emitAnno = EmitCircuitAnnotation(emitter.getClass)
-    compile(state.copy(annotations = emitAnno +: state.annotations), emitter +: customTransforms)
+    val emitAnno = EmitCircuitAnnotation(emitter.getClass.asInstanceOf[Class[_ <: Emitter]])
+    compile(state.copy(annotations = AnnotationSeq(emitAnno +: state.annotations)), emitter +: customTransforms)
   }
 
   private def isCustomTransform(xform: Transform): Boolean = {

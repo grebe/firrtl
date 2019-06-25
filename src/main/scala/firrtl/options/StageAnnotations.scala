@@ -26,7 +26,7 @@ object TargetDirAnnotation extends HasShellOptions {
   val options = Seq(
     new ShellOption[String](
       longOption = "target-dir",
-      toAnnotationSeq = (a: String) => Seq(TargetDirAnnotation(a)),
+      toAnnotationSeq = (a: String) => AnnotationSeq(Seq(TargetDirAnnotation(a))),
       helpText = "Work directory (default: '.')",
       shortOption = Some("td"),
       helpValueName = Some("<directory>") ) )
@@ -44,7 +44,7 @@ object ProgramArgsAnnotation {
   def addOptions(p: OptionParser[AnnotationSeq]): Unit = p.arg[String]("<arg>...")
     .unbounded()
     .optional()
-    .action( (x, c) => ProgramArgsAnnotation(x) +: c )
+    .action( (x, c) => AnnotationSeq(ProgramArgsAnnotation(x) +: c.toSeq) )
     .text("optional unbounded args")
 }
 
@@ -60,7 +60,7 @@ object InputAnnotationFileAnnotation extends HasShellOptions {
   val options = Seq(
     new ShellOption[String](
       longOption = "annotation-file",
-      toAnnotationSeq = (a: String) => Seq(InputAnnotationFileAnnotation(a)),
+      toAnnotationSeq = (a: String) => AnnotationSeq(Seq(InputAnnotationFileAnnotation(a))),
       helpText = "An input annotation file",
       shortOption = Some("faf"),
       helpValueName = Some("<file>") ) )
@@ -78,7 +78,7 @@ object OutputAnnotationFileAnnotation extends HasShellOptions {
   val options = Seq(
     new ShellOption[String](
       longOption = "output-annotation-file",
-      toAnnotationSeq = (a: String) => Seq(OutputAnnotationFileAnnotation(a)),
+      toAnnotationSeq = (a: String) => AnnotationSeq(Seq(OutputAnnotationFileAnnotation(a))),
       helpText = "An output annotation file",
       shortOption = Some("foaf"),
       helpValueName = Some("<file>") ) )
@@ -95,7 +95,7 @@ case object WriteDeletedAnnotation extends NoTargetAnnotation with StageOption w
   val options = Seq(
     new ShellOption[Unit](
       longOption = "write-deleted",
-      toAnnotationSeq = (_: Unit) => Seq(WriteDeletedAnnotation),
+      toAnnotationSeq = (_: Unit) => AnnotationSeq(Seq(WriteDeletedAnnotation)),
       helpText = "Include deleted annotations in the output annotation file" ) )
 
 }

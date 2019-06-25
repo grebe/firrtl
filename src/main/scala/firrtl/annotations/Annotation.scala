@@ -189,7 +189,7 @@ private[firrtl] object LegacyAnnotation {
   // scalastyle:on
   def convertLegacyAnnos(annos: AnnotationSeq): AnnotationSeq = {
     var warned: Boolean = false
-    annos.map {
+    AnnotationSeq(annos.map {
       case legacy: LegacyAnnotation =>
         val annox = convertLegacyAnno(legacy)
         if (!warned && (annox ne legacy)) {
@@ -200,7 +200,7 @@ private[firrtl] object LegacyAnnotation {
         }
         annox
       case other => other
-    }
+    })
   }
 }
 

@@ -1,6 +1,7 @@
 // See LICENSE for license details.
 
-package firrtl.analyses
+package firrtl
+package analyses
 
 import firrtl.annotations.NoTargetAnnotation
 import firrtl.{CircuitState, LowForm, Namespace, Transform}
@@ -17,6 +18,6 @@ class GetNamespace extends Transform {
 
   def execute(state: CircuitState): CircuitState = {
     val namespace = Namespace(state.circuit)
-    state.copy(annotations = new ModuleNamespaceAnnotation(namespace) +: state.annotations)
+    state.copy(annotations = AnnotationSeq(new ModuleNamespaceAnnotation(namespace) +: state.annotations))
   }
 }

@@ -2,6 +2,7 @@
 
 package firrtl.options.phases
 
+import firrtl._
 import firrtl.AnnotationSeq
 import firrtl.options.{Phase, TargetDirAnnotation}
 
@@ -15,8 +16,10 @@ class AddDefaults extends Phase {
   def transform(annotations: AnnotationSeq): AnnotationSeq = {
     val td = annotations.collectFirst{ case a: TargetDirAnnotation => a}.isEmpty
 
-    (if (td) Seq(TargetDirAnnotation()) else Seq()) ++
+    AnnotationSeq(
+      (if (td) Seq(TargetDirAnnotation()) else Seq()) ++
       annotations
+    )
   }
 
 }

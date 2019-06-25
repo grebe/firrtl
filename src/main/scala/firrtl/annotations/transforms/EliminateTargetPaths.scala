@@ -2,6 +2,7 @@
 
 package firrtl.annotations.transforms
 
+import firrtl._
 import firrtl.Mappers._
 import firrtl.analyses.InstanceGraph
 import firrtl.annotations.TargetToken.{Instance, OfModule}
